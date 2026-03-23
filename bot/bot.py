@@ -31,14 +31,16 @@ def main():
     else:
         from aiogram import Bot, Dispatcher, F
         from aiogram.filters import Command
+        from aiogram.types import Message, CallbackQuery
         from config import settings
-        from aiogram.types import Message
+        from handlers.keyboards import main_menu_keyboard
         
         bot = Bot(token=settings.bot_token)
         dp = Dispatcher()
 
         @dp.message(Command("start"))
-        async def cmd_start(message: Message): await message.answer(await start_handler(message.text))
+        async def cmd_start(message: Message):
+            await message.answer(await start_handler(message.text), reply_markup=main_menu_keyboard())
         
         @dp.message(Command("help"))
         async def cmd_help(message: Message): await message.answer(await help_handler(message.text))
@@ -52,9 +54,23 @@ def main():
         @dp.message(Command("scores"))
         async def cmd_scores(message: Message): await message.answer(await scores_handler(message.text))
 
+        @dp.callback_query(F.data == "cmd_help")
+        async def cb_help(callback: CallbackQuery):
+            await callback.message.answer(await help_handler(""))
+            await callback.answer()
+
+        @dp.callback_query(F.data == "cmd_health")
+        async def cb_health(callback: CallbackQuery):
+            await callback.message.answer(await health_handler(""))
+            await callback.answer()
+
+        @dp.callback_query(F.data == "cmd_labs")
+        async def cb_labs(callback: CallbackQuery):
+            await callback.message.answer(await labs_handler(""))
+            await callback.answer()
+
         @dp.message(F.text)
         async def cmd_text(message: Message):
-            # Send processing message
             wait_msg = await message.answer("Thinking...")
             try:
                 result = await route_intent(message.text)
