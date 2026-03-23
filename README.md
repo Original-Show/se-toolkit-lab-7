@@ -63,6 +63,21 @@ This is what a customer might tell you. Your job is to turn it into a working pr
 3. Deployed and running on VM
 4. README documents deployment
 
+## Deploy
+
+To deploy the bot alongside the backend on your VM, follow these steps:
+
+1. Ensure your `.env.docker.secret` includes the bot's required environment variables (`BOT_TOKEN`, `LMS_API_KEY`, `LLM_API_KEY`).
+2. Build and start the containers using Docker Compose:
+   ```bash
+   docker compose --env-file .env.docker.secret up --build -d
+   ```
+3. Verify the bot is running and check its logs for any errors:
+   ```bash
+   docker compose --env-file .env.docker.secret ps bot
+   docker compose --env-file .env.docker.secret logs bot --tail 20
+   ```
+
 ## Learning advice
 
 Notice the progression above: **product brief** (vague customer ask) → **prioritized requirements** (structured) → **task specifications** (precise deliverables + acceptance criteria). This is how engineering work flows.
