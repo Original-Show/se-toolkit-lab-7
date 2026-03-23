@@ -1,4 +1,5 @@
-FROM python:3.12-slim
+ARG REGISTRY_PREFIX=harbor.pg.innopolis.university/docker-hub-cache/
+FROM ${REGISTRY_PREFIX}python:3.14.2-slim-bookworm
 
 # Install uv.
 COPY --from=ghcr.io/astral-sh/uv:0.4.15 /uv /bin/uv
